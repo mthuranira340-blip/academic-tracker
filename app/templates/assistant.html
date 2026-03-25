@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="row g-4">
+    <div class="col-xl-5">
+        <div class="content-card h-100">
+            <p class="eyebrow">Assignment Support</p>
+            <h3 class="mb-3">AI Study Assistant</h3>
+            <p class="text-body-secondary">
+                Ask for assignment help, revision support, and targeted notes for each unit.
+            </p>
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.unit_id.label(class="form-label") }}
+                    {{ form.unit_id(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.assignment_type.label(class="form-label") }}
+                    {{ form.assignment_type(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.study_hours.label(class="form-label") }}
+                    {{ form.study_hours(class="form-control", min="1", step="1") }}
+                    <small class="text-body-secondary">Billing is calculated at ${{ pricing_rate }} per 100 hours.</small>
+                </div>
+                <div class="mb-3">
+                    {{ form.question.label(class="form-label") }}
+                    {{ form.question(class="form-control") }}
+                    {% for error in form.question.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+                {{ form.submit(class="btn btn-primary w-100") }}
+            </form>
+
+            <div class="assistant-pricing mt-4">
+                <div class="scheme-row">
+                    <span class="dollar-icon small-dollar">$</span>
+                    <span>Requested Support Time</span>
+                    <strong>{{ pricing_hours }} hours</strong>
+                </div>
+                <div class="scheme-row">
+                    <span class="dollar-icon small-dollar">$</span>
+                    <span>Rate</span>
+                    <strong>${{ pricing_rate }} / 100 hours</strong>
+                </div>
+                <div class="scheme-row total-row">
+                    <span class="dollar-icon small-dollar">$</span>
+                    <span>Estimated Charge</span>
+                    <strong>${{ pricing_amount }}</strong>
+                </div>
+                <div class="payment-destination mt-3">
+                    <span class="dollar-icon small-dollar">$</span>
+                    <span class="badge rounded-pill text-bg-light service-chip">PayPal</span>
+                    <strong>mthuranira340@gmail.com</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-7">
+        <div class="content-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow mb-1">Filtered Notes</p>
+                    <h3 class="mb-0">Best Notes By Unit</h3>
+                </div>
+                <form method="GET" class="d-flex gap-2">
+                    <select class="form-select" name="unit_id" onchange="this.form.submit()">
+                        {% for value, label in form.unit_id.choices %}
+                        <option value="{{ value }}" {% if value == selected_unit_id %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+
+            <div class="notes-grid">
+                {% for note in notes %}
+                <article class="note-card">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <span class="badge rounded-pill text-bg-primary mb-2">{{ note.tag }}</span>
+                            <h5 class="mb-1">{{ note.title }}</h5>
+                            <p class="text-body-secondary mb-2">{{ note.unit_code }} - {{ note.unit_name }}</p>
+                        </div>
+                        <div class="quality-pill">
+                            {{ note.quality_score }}%
+                        </div>
+                    </div>
+                    <p>{{ note.summary }}</p>
+                    <ul class="note-points">
+                        {% for point in note.points %}
+                        <li>{{ point }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+                {% else %}
+                <p class="text-body-secondary mb-0">No notes are available for the selected unit yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow mb-1">Assistant Output</p>
+                    <h3 class="mb-0">Assignment Help and Course Notes</h3>
+                </div>
+                {% if assistant_source %}
+                <span class="badge rounded-pill text-bg-light service-chip">{{ assistant_source }}</span>
+                {% endif %}
+            </div>
+
+            {% if assistant_response %}
+            <pre class="assistant-output">{{ assistant_response }}</pre>
+            {% else %}
+            <p class="text-body-secondary mb-0">
+                Submit a question to generate assignment guidance and quick notes for the selected unit.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

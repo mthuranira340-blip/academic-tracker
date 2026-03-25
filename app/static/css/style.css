@@ -1,0 +1,400 @@
+:root {
+    --bg: #eef4ff;
+    --panel: rgba(255, 255, 255, 0.8);
+    --panel-strong: #ffffff;
+    --text: #1d2a44;
+    --muted: #6c7a96;
+    --accent: #0d6efd;
+    --accent-soft: #dbe7ff;
+    --border: rgba(29, 42, 68, 0.1);
+    --shadow: 0 18px 40px rgba(31, 56, 102, 0.12);
+}
+
+[data-bs-theme="dark"] {
+    --bg: #0e1726;
+    --panel: rgba(13, 24, 43, 0.85);
+    --panel-strong: #13203a;
+    --text: #ecf2ff;
+    --muted: #97a6c3;
+    --accent: #6ea8fe;
+    --accent-soft: rgba(110, 168, 254, 0.18);
+    --border: rgba(236, 242, 255, 0.08);
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+body {
+    font-family: "Outfit", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(13, 110, 253, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(25, 135, 84, 0.14), transparent 28%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: var(--panel);
+    backdrop-filter: blur(18px);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.brand-card,
+.content-card,
+.metric-card,
+.hero-panel,
+.auth-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: 24px;
+}
+
+.brand-card,
+.content-card,
+.auth-panel {
+    padding: 1.5rem;
+}
+
+.sidebar .nav-link {
+    color: var(--text);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    background: transparent;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+.main-content.full-width {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.topbar,
+.hero-panel {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.topbar {
+    margin-bottom: 1.5rem;
+}
+
+.hero-panel {
+    padding: 1.5rem;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+}
+
+.gpa-badge {
+    background: linear-gradient(135deg, var(--accent), #2fb380);
+    color: white;
+    border-radius: 22px;
+    padding: 1rem 1.25rem;
+    min-width: 160px;
+    text-align: center;
+}
+
+.gpa-badge strong {
+    display: block;
+    font-size: 2rem;
+}
+
+.metric-card {
+    padding: 1.25rem;
+}
+
+.metric-card p,
+.notification-item small {
+    color: var(--muted);
+}
+
+.metric-card h3 {
+    margin: 0;
+}
+
+.notification-stack {
+    display: grid;
+    gap: 1rem;
+}
+
+.notification-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 18px;
+    background: var(--accent-soft);
+}
+
+.payment-card {
+    padding: 1.5rem;
+}
+
+.payment-card-primary {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.14), var(--panel));
+}
+
+.payment-card-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.16), var(--panel));
+}
+
+.payment-card-danger {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.16), var(--panel));
+}
+
+.payment-card-info {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.16), var(--panel));
+}
+
+.payment-deadline {
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: flex-start;
+}
+
+.service-chip {
+    color: var(--text) !important;
+}
+
+.payment-scheme {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 1rem;
+    max-width: 420px;
+}
+
+.scheme-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    align-items: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid var(--border);
+}
+
+.total-row {
+    background: var(--accent-soft);
+}
+
+.payment-destination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.payment-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dollar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #198754, #20c997);
+    color: #ffffff;
+    font-weight: 800;
+    box-shadow: 0 10px 24px rgba(25, 135, 84, 0.24);
+    flex-shrink: 0;
+}
+
+.small-dollar {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.95rem;
+}
+
+.assistant-pricing {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.notes-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.note-card {
+    padding: 1.1rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.42);
+}
+
+.quality-pill {
+    min-width: 72px;
+    text-align: center;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    font-weight: 700;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.note-points {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.note-points li {
+    margin-bottom: 0.45rem;
+}
+
+.assistant-output {
+    white-space: pre-wrap;
+    margin: 0;
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.46);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: "Outfit", sans-serif;
+}
+
+.calendar-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.calendar-item {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px solid var(--border);
+}
+
+.calendar-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+}
+
+.calendar-dot.academic {
+    background: #0d6efd;
+}
+
+.calendar-dot.co_curricular {
+    background: #fd7e14;
+}
+
+.calendar-body {
+    flex: 1;
+}
+
+.calendar-meta {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-top: 0.2rem;
+}
+
+.calendar-time {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.reminder-card {
+    padding: 1rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.18), rgba(255, 255, 255, 0.4));
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 0.35rem;
+}
+
+.auth-wrapper {
+    width: min(1100px, 100%);
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.intro-panel {
+    background:
+        linear-gradient(140deg, rgba(13, 110, 253, 0.92), rgba(47, 179, 128, 0.82)),
+        var(--panel);
+    color: white;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.narrow-card {
+    max-width: 760px;
+}
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text);
+}
+
+.form-control,
+.form-select {
+    border-radius: 14px;
+    padding: 0.8rem 1rem;
+}
+
+.btn {
+    border-radius: 14px;
+}
+
+@media (max-width: 992px) {
+    .app-shell {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .auth-wrapper {
+        grid-template-columns: 1fr;
+    }
+}

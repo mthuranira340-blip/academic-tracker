@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-card narrow-card">
+    <p class="eyebrow">Application Message</p>
+    <h3>{{ title }}</h3>
+    <p class="text-body-secondary">{{ message }}</p>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Return to dashboard</a>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Go to login</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero-panel mb-4">
+    <div>
+        <p class="eyebrow">Performance Overview</p>
+        <h3 class="mb-2">
+            {% if selected_student %}
+                {{ selected_student.username }}'s academic snapshot
+            {% else %}
+                No linked student profile found
+            {% endif %}
+        </h3>
+        <p class="text-body-secondary mb-0">
+            Review GPA, semester trends, and low-grade notifications in one place.
+        </p>
+    </div>
+    <div class="gpa-badge">
+        <span>Current GPA</span>
+        <strong>{{ gpa }}</strong>
+    </div>
+</section>
+
+<section class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="metric-card">
+            <p>Total Students</p>
+            <h3>{{ summary.students }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="metric-card">
+            <p>Total Units</p>
+            <h3>{{ summary.units }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="metric-card">
+            <p>Total Grades</p>
+            <h3>{{ summary.grades }}</h3>
+        </div>
+    </div>
+</section>
+
+<section class="content-card mb-4 payment-card payment-card-{{ payment_prompt.tone }}">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+            <p class="eyebrow">Academic Calendar Payment Prompt</p>
+            <div class="payment-heading mb-2">
+                <span class="dollar-icon">$</span>
+                <h4 class="mb-0">{{ payment_prompt.term_name }}</h4>
+            </div>
+            <p class="mb-2">{{ payment_prompt.summary }}</p>
+            <div class="payment-scheme">
+                {% for service in payment_prompt.services %}
+                <div class="scheme-row">
+                    <span>{{ service.name }}</span>
+                    <strong>${{ service.amount_usd }}</strong>
+                </div>
+                {% endfor %}
+                <div class="scheme-row total-row">
+                    <span>Total Due</span>
+                    <strong>${{ payment_prompt.total_amount_usd }}</strong>
+                </div>
+            </div>
+            <div class="payment-destination mt-3">
+                <span class="dollar-icon small-dollar">$</span>
+                <span class="badge rounded-pill text-bg-light service-chip">PayPal</span>
+                <strong>{{ payment_prompt.paypal_account }}</strong>
+            </div>
+        </div>
+        <div class="payment-deadline">
+            <span class="badge rounded-pill text-bg-{{ payment_prompt.tone }} mb-2">{{ payment_prompt.status }}</span>
+            <strong>{{ payment_prompt.deadline }}</strong>
+            <small>
+                {% if payment_prompt.days_left >= 0 %}
+                    {{ payment_prompt.days_left }} day(s) left
+                {% else %}
+                    {{ payment_prompt.days_left | abs }} day(s) overdue
+                {% endif %}
+            </small>
+        </div>
+    </div>
+</section>
+
+<section class="row g-4 mb-4">
+    <div class="col-xl-4">
+        <div class="content-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow mb-1">Planner</p>
+                    <h4 class="mb-0">Academic Calendar</h4>
+                </div>
+                <span class="badge rounded-pill text-bg-light service-chip">24h reminder</span>
+            </div>
+            {% if current_user.role == 'student' %}
+            <form method="POST" action="{{ url_for('main.add_activity') }}" novalidate>
+                {{ activity_form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ activity_form.title.label(class="form-label") }}
+                    {{ activity_form.title(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ activity_form.category.label(class="form-label") }}
+                    {{ activity_form.category(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ activity_form.start_time.label(class="form-label") }}
+                    {{ activity_form.start_time(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ activity_form.description.label(class="form-label") }}
+                    {{ activity_form.description(class="form-control") }}
+                </div>
+                {{ activity_form.submit(class="btn btn-primary w-100") }}
+            </form>
+            {% else %}
+            <p class="text-body-secondary mb-0">
+                Parents can view the student calendar and reminders here, but only students can add or edit activities.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="content-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow mb-1">Reminder Center</p>
+                    <h4 class="mb-0">Due Within 24 Hours</h4>
+                </div>
+                <span class="dollar-icon small-dollar">!</span>
+            </div>
+            {% if activity_reminders %}
+            <div class="notification-stack">
+                {% for reminder in activity_reminders %}
+                <div class="reminder-card">
+                    <span class="badge rounded-pill text-bg-warning mb-2">{{ reminder.category }}</span>
+                    <strong>{{ reminder.title }}</strong>
+                    <small>{{ reminder.start_label }}</small>
+                    <p class="mb-0">{{ reminder.message }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-body-secondary mb-0">
+                No activities are currently within the 24-hour reminder window.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="content-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow mb-1">Upcoming Events</p>
+                    <h4 class="mb-0">Calendar Timeline</h4>
+                </div>
+                <span class="badge rounded-pill text-bg-primary">{{ calendar_items|length }} items</span>
+            </div>
+            {% if calendar_items %}
+            <div class="calendar-list">
+                {% for item in calendar_items %}
+                <div class="calendar-item">
+                    <div class="calendar-dot {{ item.category }}"></div>
+                    <div class="calendar-body">
+                        <div class="d-flex justify-content-between gap-3 flex-wrap">
+                            <div>
+                                <strong>{{ item.title }}</strong>
+                                <div class="calendar-meta">
+                                    {{ item.category.replace('_', ' ')|title }} | {{ item.date_label }} | {{ item.time_label }}
+                                </div>
+                            </div>
+                            <div class="calendar-time">
+                                {% if item.is_upcoming %}
+                                    {{ item.hours_until }}h left
+                                {% else %}
+                                    Completed
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p class="mb-2">{{ item.description }}</p>
+                        <small class="text-body-secondary">Reminder: {{ item.reminder_label }}</small>
+                        {% if current_user.role == 'student' %}
+                        <form method="POST" action="{{ url_for('main.delete_activity', activity_id=item.id) }}" class="mt-2">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-body-secondary mb-0">
+                No calendar activities added yet. Start by saving a lecture, exam, meeting, or club event.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="row g-4">
+    <div class="col-xl-6">
+        <div class="content-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Academic Performance Over Time</h4>
+                <span class="badge rounded-pill text-bg-primary">Chart.js</span>
+            </div>
+            <canvas id="performanceChart" height="120"></canvas>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="content-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">GPA Per Semester</h4>
+                <span class="badge rounded-pill text-bg-success">Bar View</span>
+            </div>
+            <canvas id="gpaChart" height="120"></canvas>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="content-card h-100">
+            <h4>Low Grade Notifications</h4>
+            {% if alerts %}
+                <div class="notification-stack">
+                    {% for alert in alerts %}
+                    <div class="notification-item">
+                        <strong>{{ alert.unit.unit_code }}</strong>
+                        <span>{{ alert.unit.unit_name }}</span>
+                        <small>{{ alert.grade }} in {{ alert.semester }} ({{ alert.academic_year }})</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-body-secondary mb-0">No low-grade alerts. Keep up the good work.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.performanceChartData = {
+        labels: {{ timeline_labels | tojson }},
+        values: {{ timeline_values | tojson }}
+    };
+    window.gpaChartData = {
+        labels: {{ timeline_labels | tojson }},
+        values: {{ timeline_values | tojson }}
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="row g-4">
+    <div class="col-lg-4">
+        <div class="content-card">
+            <h4 class="mb-3">Add Unit</h4>
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.unit_name.label(class="form-label") }}
+                    {{ form.unit_name(class="form-control") }}
+                    {% for error in form.unit_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.unit_code.label(class="form-label") }}
+                    {{ form.unit_code(class="form-control", placeholder="CSC101") }}
+                    {% for error in form.unit_code.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.course.label(class="form-label") }}
+                    {{ form.course(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.level_of_study.label(class="form-label") }}
+                    {{ form.level_of_study(class="form-select") }}
+                </div>
+                {{ form.submit(class="btn btn-primary w-100") }}
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="content-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">All Units</h4>
+                <span class="badge rounded-pill text-bg-light">{{ units|length }} records</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Unit</th>
+                            <th>Course</th>
+                            <th>Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for unit in units %}
+                        <tr>
+                            <td>{{ unit.unit_code }}</td>
+                            <td>{{ unit.unit_name }}</td>
+                            <td>{{ unit.course }}</td>
+                            <td>{{ unit.level_of_study }}</td>
+                            <td class="d-flex gap-2">
+                                <a href="{{ url_for('main.edit_unit', unit_id=unit.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form method="POST" action="{{ url_for('main.delete_unit', unit_id=unit.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-body-secondary">No units added yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

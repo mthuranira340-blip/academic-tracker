@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="row g-4">
+    {% if not read_only %}
+    <div class="col-lg-4">
+        <div class="content-card">
+            <h4 class="mb-3">Add Grade</h4>
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.user_id.label(class="form-label") }}
+                    {{ form.user_id(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.unit_id.label(class="form-label") }}
+                    {{ form.unit_id(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.grade.label(class="form-label") }}
+                    {{ form.grade(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.semester.label(class="form-label") }}
+                    {{ form.semester(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.academic_year.label(class="form-label") }}
+                    {{ form.academic_year(class="form-control") }}
+                </div>
+                {{ form.submit(class="btn btn-primary w-100") }}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    <div class="{% if read_only %}col-12{% else %}col-lg-8{% endif %}">
+        <div class="content-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">All Grades</h4>
+                {% if read_only %}
+                <span class="badge rounded-pill text-bg-secondary">Read-only parent view</span>
+                {% endif %}
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Unit</th>
+                            <th>Grade</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                            {% if not read_only %}<th>Actions</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in grades %}
+                        <tr>
+                            <td>{{ item.student.username }}</td>
+                            <td>{{ item.unit.unit_code }} - {{ item.unit.unit_name }}</td>
+                            <td><span class="badge text-bg-primary">{{ item.grade }}</span></td>
+                            <td>{{ item.semester }}</td>
+                            <td>{{ item.academic_year }}</td>
+                            {% if not read_only %}
+                            <td class="d-flex gap-2">
+                                <a href="{{ url_for('main.edit_grade', grade_id=item.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form method="POST" action="{{ url_for('main.delete_grade', grade_id=item.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="{% if read_only %}5{% else %}6{% endif %}" class="text-center text-body-secondary">No grades found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
