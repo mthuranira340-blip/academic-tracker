@@ -1,6 +1,6 @@
 # University Academic Tracker
 
-University Academic Tracker is a beginner-friendly Flask and MySQL web app for managing university units, grades, GPA, progress charts, and parent read-only access.
+University Academic Tracker is a beginner-friendly Flask web app for managing university units, grades, GPA, progress charts, parent read-only access, payment prompts, AI study support, and calendar reminders. It supports MySQL for full deployments and SQLite for free demo hosting.
 
 ## Features
 
@@ -91,6 +91,45 @@ Then open:
 http://127.0.0.1:5000
 ```
 
+## Free Demo Deployment
+
+For a free demo deployment, the app now defaults to SQLite automatically when `DATABASE_URL` is not set.
+
+That means you can launch it on a free host without configuring MySQL first.
+
+## Deploying To Render
+
+This project is now ready for Render.
+
+Build command:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start command:
+
+```bash
+gunicorn run:app
+```
+
+Environment variables to add on Render:
+
+```text
+SECRET_KEY=your-secret-key
+FLASK_ENV=production
+```
+
+Optional for full database hosting:
+
+```text
+DATABASE_URL=mysql+pymysql://username:password@host/database_name
+```
+
+If you do not set `DATABASE_URL`, the app uses SQLite automatically for demo deployment.
+
+You can also deploy using the included `render.yaml` blueprint file.
+
 ## 5. How Roles Work
 
 - `Student`: Can add, edit, and delete units and grades.
@@ -126,9 +165,10 @@ Required tables from your specification:
 - `units`
 - `grades`
 
-Additional table used to support parent read-only access:
+Additional tables used in the application:
 
 - `parent_student_links`
+- `activities`
 
 ## 9. Future Improvements
 

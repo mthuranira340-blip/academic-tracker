@@ -19,9 +19,9 @@
                     {{ form.assignment_type(class="form-select") }}
                 </div>
                 <div class="mb-3">
-                    {{ form.study_hours.label(class="form-label") }}
-                    {{ form.study_hours(class="form-control", min="1", step="1") }}
-                    <small class="text-body-secondary">Billing is calculated at ${{ pricing_rate }} per 100 hours.</small>
+                    <label class="form-label">Support Package</label>
+                    <input class="form-control" value="{{ pricing_period_months }} months access" readonly>
+                    <small class="text-body-secondary">Billing is fixed at ${{ pricing_rate }} for every {{ pricing_period_months }} months.</small>
                 </div>
                 <div class="mb-3">
                     {{ form.question.label(class="form-label") }}
@@ -34,13 +34,13 @@
             <div class="assistant-pricing mt-4">
                 <div class="scheme-row">
                     <span class="dollar-icon small-dollar">$</span>
-                    <span>Requested Support Time</span>
-                    <strong>{{ pricing_hours }} hours</strong>
+                    <span>Support Period</span>
+                    <strong>{{ pricing_period_months }} months</strong>
                 </div>
                 <div class="scheme-row">
                     <span class="dollar-icon small-dollar">$</span>
                     <span>Rate</span>
-                    <strong>${{ pricing_rate }} / 100 hours</strong>
+                    <strong>${{ pricing_rate }} / {{ pricing_period_months }} months</strong>
                 </div>
                 <div class="scheme-row total-row">
                     <span class="dollar-icon small-dollar">$</span>

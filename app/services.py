@@ -83,7 +83,8 @@ ACADEMIC_CALENDAR = [
 ]
 
 PAYPAL_ACCOUNT = "mthuranira340@gmail.com"
-AI_RATE_USD_PER_100_HOURS = 30
+AI_SUPPORT_PRICE_USD = 30
+AI_SUPPORT_PERIOD_MONTHS = 4
 
 
 def get_payment_prompt(today=None):
@@ -145,9 +146,8 @@ def get_payment_prompt(today=None):
     }
 
 
-def calculate_ai_support_pricing(hours):
-    normalized_hours = max(int(hours or 0), 1)
-    return round((normalized_hours / 100) * AI_RATE_USD_PER_100_HOURS, 2)
+def calculate_ai_support_pricing():
+    return AI_SUPPORT_PRICE_USD
 
 
 def build_note_library(units):

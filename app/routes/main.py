@@ -11,7 +11,8 @@ from ..extensions import db
 from ..forms import ActivityForm, AssistantForm, GradeForm, UnitForm
 from ..models import Activity, Grade, ParentStudentLink, Unit, User
 from ..services import (
-    AI_RATE_USD_PER_100_HOURS,
+    AI_SUPPORT_PERIOD_MONTHS,
+    AI_SUPPORT_PRICE_USD,
     build_activity_payload,
     build_note_library,
     calculate_ai_support_pricing,
@@ -321,8 +322,7 @@ def assistant():
     filtered_notes = filter_notes(all_notes, selected_unit_id)
     assistant_response = None
     assistant_source = None
-    pricing_hours = form.study_hours.data or 100
-    pricing_amount = calculate_ai_support_pricing(pricing_hours)
+    pricing_amount = calculate_ai_support_pricing()
 
     if form.validate_on_submit():
         selected_unit = Unit.query.get_or_404(form.unit_id.data)
@@ -331,8 +331,7 @@ def assistant():
         )
         selected_unit_id = selected_unit.id
         filtered_notes = filter_notes(all_notes, selected_unit_id)
-        pricing_hours = form.study_hours.data
-        pricing_amount = calculate_ai_support_pricing(pricing_hours)
+        pricing_amount = calculate_ai_support_pricing()
         if used_live_ai:
             flash("AI assistant response generated successfully.", "success")
         else:
@@ -343,9 +342,9 @@ def assistant():
         form=form,
         notes=filtered_notes,
         selected_unit_id=selected_unit_id,
-        pricing_hours=pricing_hours,
         pricing_amount=pricing_amount,
-        pricing_rate=AI_RATE_USD_PER_100_HOURS,
+        pricing_period_months=AI_SUPPORT_PERIOD_MONTHS,
+        pricing_rate=AI_SUPPORT_PRICE_USD,
         assistant_response=assistant_response,
         assistant_source=assistant_source,
     )

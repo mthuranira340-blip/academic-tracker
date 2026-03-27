@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DateTimeLocalField, IntegerField, PasswordField, SelectField, StringField, SubmitField, TextAreaField
+from wtforms import DateTimeLocalField, PasswordField, SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 
 from .models import Unit, User
@@ -104,7 +104,6 @@ class AssistantForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
-    study_hours = IntegerField("Support Hours", validators=[DataRequired()], default=100)
     question = TextAreaField(
         "What do you need help with?",
         validators=[DataRequired(), Length(min=10, max=1000)],
